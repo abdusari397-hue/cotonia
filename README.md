@@ -27,7 +27,7 @@ Created by `prisma/seed.ts`. **Local development only.**
 | Admin      | `admin@cotonia.test`      | Platform admin                   |
 
 Every demo account (including the other seeded shops and suppliers) uses the password
-`Cotonia2026!`. With `DEMO_MODE="true"` in `.env`, the login page also shows one-click demo
+the password set in `DEMO_PASSWORD` in `.env`. With `DEMO_MODE="true"` in `.env`, the login page also shows one-click demo
 logins. They only appear in development (`npm run dev`).
 
 ## Features
@@ -96,6 +96,20 @@ docs/design-system.md     colours, type and component rules
 3. Add Turkish product and category names to `nameTranslations` (see `prisma/seed.ts`).
 
 Arabic uses Western digits (0-9) and IBM Plex Sans Arabic; English uses Inter and Poppins.
+
+## Deploying on Vercel
+
+1. On vercel.com, sign in with GitHub, choose **Add New → Project** and import this repository.
+2. In **Settings → Environment Variables**, add `DEMO_PASSWORD` (your own password for the demo
+   accounts, 8+ characters).
+3. In the project, open **Storage → Create Database → Neon** and connect it to the project
+   (this adds `DATABASE_URL` and `DATABASE_URL_UNPOOLED`).
+4. Redeploy. `vercel.json` runs `scripts/vercel-build.mjs`, which switches Prisma to PostgreSQL,
+   creates the tables, loads the demo data into an empty database (`prisma/seed-if-empty.ts`)
+   and builds the site. Local development keeps using SQLite.
+
+Demo login buttons are hidden in production; sign in with the demo accounts above and change the
+admin password before sharing the link widely.
 
 ## Before going live
 

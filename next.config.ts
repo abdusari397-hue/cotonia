@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
     // Product photos are uploaded through Server Actions.
     serverActions: {
       bodySizeLimit: "12mb",
+      // Lets forms work through a temporary public tunnel link (Cloudflare quick tunnel).
+      allowedOrigins: ["*.trycloudflare.com"],
     },
   },
 };

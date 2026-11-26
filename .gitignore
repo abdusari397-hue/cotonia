@@ -48,3 +48,6 @@ next-env.d.ts
 
 # local Claude settings
 .claude/settings.local.json
+
+# generated on Vercel from schema.prisma
+/prisma/schema.postgres.prisma

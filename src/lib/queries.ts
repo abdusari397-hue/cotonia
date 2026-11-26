@@ -85,19 +85,22 @@ export type CatalogFilters = {
   page?: number;
 };
 
+// SQLite "contains" ignores case already; PostgreSQL (production) needs mode: "insensitive".
+const ci = (process.env.DATABASE_URL ?? "").startsWith("postgres") ? { mode: "insensitive" as const } : {};
+
 export async function getCatalog(filters: CatalogFilters) {
   const and: Prisma.ProductWhereInput[] = [publicProductWhere];
   if (filters.q) {
     const q = filters.q;
     and.push({
       OR: [
-        { name: { contains: q } },
-        { nameTranslations: { contains: q } },
-        { sku: { contains: q } },
-        { fabric: { contains: q } },
-        { store: { name: { contains: q } } },
-        { category: { name: { contains: q } } },
-        { category: { nameTranslations: { contains: q } } },
+        { name: { contains: q, ...ci } },
+        { nameTranslations: { contains: q, ...ci } },
+        { sku: { contains: q, ...ci } },
+        { fabric: { contains: q, ...ci } },
+        { store: { name: { contains: q, ...ci } } },
+        { category: { name: { contains: q, ...ci } } },
+        { category: { nameTranslations: { contains: q, ...ci } } },
       ],
     });
   }
@@ -214,9 +217,9 @@ export async function getStores(filters: { q?: string; country?: string; verifie
   if (filters.q) {
     and.push({
       OR: [
-        { name: { contains: filters.q } },
-        { tagline: { contains: filters.q } },
-        { city: { contains: filters.q } },
+        { name: { contains: filters.q, ...ci } },
+        { tagline: { contains: filters.q, ...ci } },
+        { city: { contains: filters.q, ...ci } },
       ],
     });
   }

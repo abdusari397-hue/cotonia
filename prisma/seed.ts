@@ -9,7 +9,16 @@ import { randomCode, slugify } from "../src/lib/utils";
 const prisma = new PrismaClient();
 
 /** Password of every demo account (local development only). Also listed in README.md. */
-const DEMO_PASSWORD = "Cotonia2026!";
+// Password for every demo account, read from .env (never committed).
+try {
+  process.loadEnvFile();
+} catch {
+  // No .env file (e.g. on Vercel): the variables come from the environment.
+}
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD ?? "";
+if (DEMO_PASSWORD.length < 8) {
+  throw new Error("Set DEMO_PASSWORD (8+ characters) in .env, or in Vercel's environment variables, before seeding.");
+}
 
 // Deterministic pseudo-random numbers, so every reset produces the same catalog.
 function mulberry32(seed: number) {
